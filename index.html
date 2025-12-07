@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html lang="id"> 
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Convanstore - Toko Sepatu Converse</title>
+    <style>
+        body { 
+            font-family: Arial, sans-serif; 
+            margin: 0; 
+            padding: 0; 
+            background-image: url("backgroundsepatu.jpg");
+            background-size: cover; 
+            background-repeat: no-repeat; 
+            background-attachment: fixed; 
+            animation: fadeIn 1s ease-in-out; 
+        }
+        header {
+            background-image: url("backgroundtokosepatu.jpg");
+            background-size: cover;
+            background-repeat: no-repeat;
+            background-position: center;
+            color: white;
+            text-align: center;
+            padding: 20px;
+            height: 50vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            animation: slideDown 1s ease-out;
+        }
+        nav { 
+            background-color: #fa3b3b; 
+            padding: 10px; 
+            text-align: center; 
+            position: relative; 
+            animation: fadeInUp 1s ease-out 0.5s both; 
+        }
+        nav a { 
+            color: rgb(0, 0, 0); 
+            margin: 0 15px; 
+            text-decoration: none; 
+            transition: color 0.3s ease, transform 0.3s ease; 
+            animation: pulse 2s infinite; 
+        }
+        nav a:hover { 
+            color: #ffcc00; 
+            transform: scale(1.1); 
+            animation: none; 
+        }
+        .cart-icon {
+            position: absolute;
+            right: 20px;
+            top: 10px;
+            cursor: pointer;
+            font-size: 24px;
+            color: black;
+            transition: transform 0.3s;
+        }
+        .cart-icon:hover {
+            transform: scale(1.2);
+        }
+        .cart-count {
+            background: red;
+            color: white;
+            border-radius: 50%;
+            padding: 2px 6px;
+            font-size: 12px;
+            position: absolute;
+            top: -5px;
+            right: -10px;
+        }
+        .container { 
+            max-width: 1200px; 
+            margin: 20px auto; 
+            padding: 20px; 
+            background: rgb(255, 255, 255); 
+            border-radius: 8px; 
+            animation: fadeInUp 1s ease-out 1s both; 
+        }
+        .search-container {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .search-container label {
+            font-size: 18px;
+            margin-right: 10px;
+        }
+        .search-container input {
+            padding: 10px;
+            width: 300px;
+            font-size: 16px;
+            border: 1px solid #ff4242;
+            border-radius: 4px;
+        }
+        .product { 
+            display: inline-block; 
+            width: calc(30% - 20px); 
+            margin: 10px; 
+            text-align: center; 
+            vertical-align: top; 
+            transition: transform 0.3s ease, box-shadow 0.3s ease; 
+            animation: zoomIn 1s ease-out; 
+            cursor: pointer;
+        }
+        .product:hover { 
+            transform: scale(1.05); 
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2); 
+        }
+        .product img { 
+            width: 100%; 
+            height: 250px; 
+            object-fit: cover; 
+            border-radius: 5px; 
+            transition: transform 0.3s ease; 
+        }
+        .product img:hover { 
+            transform: rotate(5deg) scale(1.1); 
+        }
+        button { 
+            background-color: #0a0402; 
+            color: rgb(255, 68, 68); 
+            border: none; 
+            padding: 10px 20px; 
+            cursor: pointer; 
+            font-size: 16px; 
+            transition: background-color 0.3s ease, transform 0.3s ease; 
+            animation: shake 0.5s ease-in-out; 
+        }
+        button:hover { 
+            background-color: #67d859; 
+            transform: translateY(-2px); 
+            animation: none; 
+        }
+        footer { 
+            text-align: center; 
+            padding: 10px; 
+            background-color: #2e38cc; 
+            color: white; 
+            animation: fadeIn 1s ease-out 2s both; 
+        }
+
+        /* Modal Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0,0,0,0.4);
+            animation: fadeIn 0.3s;
+        }
+        .modal-content {
+            background-color: #fefefe;
+            margin: 15% auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 80%;
+            max-width: 500px;
+            border-radius: 8px;
+            animation: slideDown 0.3s;
+        }
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+        .close:hover {
+            color: black;
+        }
+        .cart-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin: 10px 0;
+        }
+        .cart-item img {
+            width: 50px;
+            height: 50px;
+            object-fit: cover;
+        }
+        .size-selection {
+            margin: 10px 0;
+        }
+        .size-selection label {
+            margin-right: 10px;
+        }
+        .size-selection select {
+            padding: 5px;
+            font-size: 16px;
+        }
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: green;
+            color: white;
+            padding: 10px;
+            border-radius: 5px;
+            display: none;
+            animation: fadeIn 0.5s;
+        }
+
+        /* Keyframe Animations */
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        @keyframes slideDown {
+            from { transform: translateY(-50px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+        @keyframes fadeInUp {
+            from { transform: translateY(30px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+        @keyframes zoomIn {
+            from { transform: scale(0.8); opacity: 0; }
+            to { transform: scale(1); opacity: 1; }
+        }
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-5px); }
+            75% { transform: translateX(5px); }
+        }
+
+        @media (max-width: 768px) {
+            .product { width: calc(45% - 20px); }
+            .search-container input { width: 80%; }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Selamat Datang di Convanstore</h1>
+        <p>Toko Sepatu Converse Terbaik di Indonesia</p>
+    </header>
+    <nav>
+        <a href="#home">Beranda</a>
+        <a href="#products">Produk</a>
+        <a href="#contact">Kontak</a>
+        <a href="#" id="login-link" onclick="openLoginModal()">Login</a>
+        <div class="cart-icon" onclick="openCartModal()">
+            🛒 <span class="cart-count" id="cart-count">0</span>
+        </div>
+    </nav>
+    <div class="container" id="home">
+        <h2>Tentang Kami</h2>
+        <p>Convanstore menawarkan koleksi sepatu Converse asli dengan harga terjangkau. Temukan model klasik seperti Chuck Taylor dan All Star.</p>
+    </div>
+    <div class="container" id="products">
+        <h2>Produk Unggulan</h2>
+        <div class="search-container">
+            <label for="search">Cari Produk:</label>
+            <input type="text" id="search" placeholder="Ketik nama sepatu...">
+        </div>
+        <div class="product" data-name="vans All Star Hitam" onclick="openProductModal('vans All Star Hitam', 'vansallstarhitam.jpg', 'Sepatu klasik dengan desain hitam yang stylish.', 156000)">
+            <img src="vansallstarhitam.jpg" alt="Vans All Star Hitam" />
+            <h3>vans All Star Hitam</h3>
+            <p>Harga: Rp 156.000</p>
+            <button>Beli Sekarang</button>
+        </div>
+        <div class="product" data-name="vans Kotak-kotak Classic" onclick="openProductModal('vans Kotak-kotak Classic', 'vanskotakkotakclassic.jpg', 'Desain kotak-kotak yang timeless dan nyaman.', 115000)">
+            <img src="vanskotakkotakclassic.jpg" alt="Vans Kotak-kotak Classic" />
+            <h3>vans Kotak-kotak Classic</h3>
+            <p>Harga: Rp 115.000</p>
+            <button>Beli Sekarang</button>
+        </div>
+        <div class="product" data-name="converse Hijau" onclick="openProductModal('converse Hijau', 'conversehijau.jpg', 'Warna hijau segar untuk gaya casual.', 58890)">
+            <img src="conversehijau.jpg" alt="Converse Hijau" />
+            <h3>converse Hijau</h3>
+            <p>Harga: Rp 58.890</p>
+            <button>Beli Sekarang</button>
+        </div>
+        <div class="product" data-name="converse Hitam" onclick="openProductModal('converse Hitam', 'conversehitam.jpg', 'Sepatu hitam klasik yang cocok untuk semua acara.', 142000)">
+            <img src="conversehitam.jpg" alt="Converse Hitam" />
+            <h3>converse Hitam</h3>
+            <p>Harga: Rp 142.000</p>
+            <button>Beli Sekarang</button>
+        </div>
+        <div class="product" data-name="Snaker Putih" onclick="openProductModal('Snaker Putih', 'snakerputih.jpg', 'Snaker Putih klasik yang cocok untuk semua acara.', 133400)">
+            <img src="snakerputih.jpg" alt="Snaker Putih" />
+            <h3>Snaker Putih</h3>
+            <p>Harga: Rp 133.400</p>
+            <button>Beli Sekarang</button>
+        </div>
+        <div class="product" data-name="Zavision Putih" onclick="openProductModal('Zavision Putih', 'zavisionputih.jpg', 'Zavision Putih klasik yang cocok untuk semua acara.', 84999)">
+            <img src="zavisionputih.jpg" alt="Zavision Putih" />
+            <h3>Zavision Putih</h3>
+            <p>Harga: Rp 84.999</p>
+            <button>Beli Sekarang</button>
+        </div>
+    <div class="container" id="contact">
+        <h2>Kontak Kami</h2>
+        <p>Email: evannurholis723@gmail.com</p>
+        <p>Telepon: 0852-8348-9225</p>
+        <p>Alamat: pagedangan no 65</p>
+    </div>
+    <footer>
+        <p>&copy; 2023 Convanstore. Semua Hak Dilindungi.</p>
+    </footer>
+
+    <!-- Modal untuk Detail Produk -->
+    <div id="product-modal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal('product-modal')">&times;</span>
+            <h2 id="product-title"></h2>
+            <img id="product-img" src="" alt="Product" style="width:100%; height:200px; object-fit:cover;">
+            <p id="product-desc"></p>
+            <p>Harga: Rp <span id="product-price"></span></p>
+            <div class="size-selection">
+                <label for="size-select">Pilih Ukuran:</label>
+                <select id="size-select">
+                    <option value="">-- Pilih Ukuran --</option>
+                    <option value="39">39</option>
+                    <option value="40">40</option>
+                    <option value="41">41</option>
+                    <option value="42">42</option>
+                    <option value="43">43</option>
+                    <option value="44">44</option>
+                    <option value="45">45</option>
+                </select>
+            </div>
+            <button onclick="addToCartFromModal()">Beli Sekarang</button>
+        </div>
+    </div>
+
+    <!-- Modal untuk Keranjang -->
+    <div id="cart-modal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal('cart-modal')">&times;</span>
+            <h2>Keranjang Belanja</h2>
+            <div id="cart-items"></div>
+            <p>Total: Rp <span id="cart-total">0</span></p>
+            <button onclick="checkout()">Checkout</button>
+        </div>
+    </div>
+
+    <!-- Modal untuk Login -->
+    <div id="login-modal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal('login-modal')">&times;</span>
+            <h2>Login</h2>
+            <form id="login-form">
+                <label for="username">Username:</label>
+                <input type="text" id="username" required><br><br>
+                <label for="password">Password:</label>
+                <input type="password" id="password" required><br><br>
+                <button type="submit">Login</button>
+            </form>
+            <p>Belum punya akun? <a href="#" onclick="openRegisterModal()">Daftar</a></p>
+        </div>
+    </div>
+
+    <!-- Modal untuk Register -->
+    <div id="register-modal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal('register-modal')">&times;</span>
+            <h2>Daftar</h2>
+            <form id="register-form">
+                <label for="reg-username">Username:</label>
+                <input type="text" id="reg-username" required><br><br>
+                <label for="reg-password">Password:</label>
+                <input type="password" id="reg-password" required><br><br>
+                <label for="reg-email">Email:</label>
+                <input type="email" id="reg-email" required><br><br>
+                <button type="submit">Daftar</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modal untuk Pemesanan -->
+    <div id="order-modal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal('order-modal')">&times;</span>
+            <h2>Pemesanan</h2>
+            <form id="order-form">
+                <label for="order-name">Nama Lengkap:</label>
+                <input type="text" id="order-name" required><br><br>
+                <label for="order-address">Alamat:</label>
+                <textarea id="order-address" required></textarea><br><br>
+                <label for="order-phone">Telepon:</label>
+                <input type="tel" id="order-phone" required><br><br>
+                <button type="submit">Lanjut ke Pembayaran</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modal untuk Pembayaran -->
+    <div id="payment-modal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal('payment-modal')">&times;</span>
+            <h2>Pembayaran</h2>
+            <form id="payment-form">
+                <label for="payment-method">Metode Pembayaran:</label>
+                <select id="payment-method" required>
+                    <option value="">-- Pilih Metode --</option>
+                    <option value="transfer">Transfer Bank</option>
+                    <option value="cod">Bayar di Tempat</option>
+                    <option value="ewallet">E-Wallet</option>
+                </select><br><br>
+                <div id="payment-details"></div>
+                <button type="submit">Bayar</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Notifikasi -->
+    <div id="notification" class="notification">Produk ditambahkan ke keranjang!</div>
+
+    <script src="script.js"></script>
+</body>
+</html>
